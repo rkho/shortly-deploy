@@ -44,7 +44,7 @@ module.exports = function(grunt) {
         '*.js'
       ],
       options: {
-        force: 'false',
+        force: false,
         jshintrc: '.jshintrc',
         ignores: [
           'public/lib/**/*.js',
@@ -70,6 +70,7 @@ module.exports = function(grunt) {
           'public/lib/**/*.js',
         ],
         tasks: [
+          // We might want to call jshint + mocha testing here before concat + uglify are run
           'concat',
           'uglify'
         ]
@@ -82,6 +83,7 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+        command: 'git push azure master'
       }
     },
   });
@@ -113,28 +115,43 @@ module.exports = function(grunt) {
   ////////////////////////////////////////////////////
 
   grunt.registerTask('test', [
+    'jshint',
     'mochaTest'
   ]);
 
   grunt.registerTask('build', [
-    'jshint',
-    'mochaTest',
     'concat',
-    'uglify'
+    // 'uglify'
   ]);
 
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
       // add your production server task here
+      // could be a git push azure master
+      // something to search: grunt to do a git push
+      console.log("horray, it's prod!");
+      grunt.task.run(['shell:prodServer']);
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
   });
 
-  grunt.registerTask('deploy', [
+  grunt.registerTask('something', function(arg) {
+    console.log(arg);
+    console.log(grunt.option);
+  })
+
+  grunt.registerTask('deploy', function (mysteryArg) {
+    grunt.task.run(['test', 'build', 'upload'])
+  }
     // add your deploy tasks here
     //run Grunt Upload after running grunt build
-  ]);
+
+    // first runs link 'grunt lint'
+    // and IF test passes run test
+    // and IF that passes, run build, which will concat + uglify
+    // Once built, run grunt upload, passing in the option of 'prod' if it exists
+  );
 
 
 };

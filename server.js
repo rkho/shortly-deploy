@@ -3,6 +3,4 @@ var app = require('./server-config.js');
 var port = process.env.PORT || 4568;
 
 app.listen(port);
-I'm a js hint error
-// console.log(process);
 console.log('Server now listening on port ' + port);
