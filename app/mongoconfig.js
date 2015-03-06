@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost/test');
 var bcrypt = require('bcrypt-nodejs');
 var crypto = require('crypto');
 
@@ -24,6 +24,7 @@ urls.pre('save', function (next) {
   var shasum = crypto.createHash('sha1');
   shasum.update(url.url);
   this.code = shasum.digest('hex').slice(0, 5);
+  next();
 });
 
 
