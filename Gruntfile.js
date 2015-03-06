@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         separator: ';'
       },
       dist: {
-        src: ['public/**/*.js'],
+        src: ['public/client/**/*.js'],
         dest: 'public/dist/production.js'
       }
     },
@@ -121,7 +121,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', [
     'concat',
-    // 'uglify'
+    'uglify'
   ]);
 
   grunt.registerTask('upload', function(n) {
